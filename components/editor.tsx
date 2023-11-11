@@ -6,12 +6,16 @@ import { convert } from "@/utils/convert";
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { docco } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import jsonStr from "./default.json";
+import { Toaster, toast } from 'sonner'
+
+import { useCopyToClipboard } from 'usehooks-ts'
 
 const Editor = () => {
 
     const [json, setJson] = useState(JSON.stringify(jsonStr));
     const [code,setCode] = useState("");
-  
+    const [value, copy] = useCopyToClipboard()
+
     const handleConvertBtnClick = () => {
       setCode(convert(JSON.parse(json)));
     }
@@ -22,9 +26,14 @@ const Editor = () => {
 
     const valid = true
 
+
+    const handleCopyBtnClick = ()=>{
+      copy(code)
+      toast('Copy Success!')
+    }
     return (
         <div className="flex items-center justify-between">
-        
+        <Toaster />
         <div className="w-5/12 rounded-3xl p-5">
           <div className="text-3xl	font-black">XState Json</div>
           <textarea 
@@ -73,7 +82,9 @@ const Editor = () => {
           </SyntaxHighlighter>
           
           <div className="flex py-2">
-            <button className="btn btn-neutral">Copy</button>
+            <button className="btn btn-neutral"
+              onClick={handleCopyBtnClick}
+            >Copy</button>
           </div>
         </div>
       </div>
