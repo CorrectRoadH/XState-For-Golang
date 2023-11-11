@@ -1,3 +1,4 @@
+"use client"
 import Editor from "@/components/editor";
 import Image from "next/image";
 
@@ -5,35 +6,36 @@ export default function Home() {
   return (
     <main>
       <div className="navbar bg-base-300">
-        <a className="btn btn-ghost normal-case text-xl">XState for Golang</a>
+        <div className="navbar-start">
+          <a className="btn btn-ghost normal-case text-xl">XState for Golang</a>
+        </div>
+        <div className="navbar-center hidden lg:flex">
+          <ul className="menu menu-horizontal px-1">
+            <li>
+              <details>
+                <summary>
+                XState
+                </summary>
+                <ul className="p-2 bg-base-100">
+                  <li><a>XState</a></li>
+                  <li><a>Stately Studio</a></li>
+                </ul>
+              </details>
+            </li>
 
-        <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
-
-          <li>
-            <a>XState</a>
-            <ul class="p-2">
-              <li><a>XState</a></li>
-              <li><a>Stately Studio</a></li>
-            </ul>
-          </li>
-
-          <li>
-            <a>Golang State Library</a>
-            <ul class="p-2">
-              <li><a>Stateless</a></li>
-              <li><a>FSm</a></li>
-            </ul>
-          </li>
-
-          <li>
-            <a>Other</a>
-            <ul class="p-2">
-              <li><a>What is State machine</a></li>
-              <li><a>Usage</a></li>
-            </ul>
-          </li>
-
-        </ul>
+            <li>
+              <details>
+                <summary>
+                Golang State Library
+                </summary>
+                <ul className="p-2 bg-base-100">
+                  <li><a>Stateless</a></li>
+                  <li><a>FSM</a></li>
+                </ul>
+              </details>
+            </li>
+          </ul>
+        </div>
 
         <div className="navbar-end overflow-hidden">
           <a className="btn btn-circle overflow-hidden" href="https://github.com/CorrectRoadH/XState-for-golang" target="_blank" >
