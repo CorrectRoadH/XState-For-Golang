@@ -89,81 +89,44 @@ export function convert<TContext, TEvent extends EventObject = AnyEventObject, T
 }, TServiceMap extends ServiceMap = ServiceMap, TTypesMeta extends TypegenConstraint = TypegenDisabled>(config:MachineConfig<TContext, any, TEvent, BaseActionObject, TServiceMap, TTypesMeta>):string{
 
     const fetchMachine = createMachine<any>(config as MachineConfig<any, any, any, any>)
-    console.log(fetchMachine)
+    // console.log(fetchMachine)
 //     const events = getEvents(config as MachineConfig<any, any, any, any>)
-//     const states = getStates(config as MachineConfig<any, any, any, any>)
+    const states = fetchMachine.states
+    console.log(states)
 
-//     console.log(events)
-//     const golangCode = `import "github.com/qmuntal/stateless"
-
-// type State string
-// const (\n ${Object.entries(config.states || {}).map(([key, value]) => `\t${key} State = "${key}"`).join('\n')}
-//     )
-
-// type Trigger string
-// const (\n ${
-//     events.map((event) => `\t${event.name} Trigger = "${event.name}"`).join('\n')}
-// )
-
-// func ${config.id}() *stateless.StateMachine {
-// 	machine := stateless.NewStateMachine(${String(config.initial)})
+    const events = fetchMachine.events
     
-//     ${states.map((state) => {
-//         return `machine.Configure(${state.name})${
-//             state.state.on ? Object.entries(state.state.on).map(([key, value]) => {
-//                 const event = events.find((event) => event.name === NameForGolang(`${state.name}_${key}`))
-//                 // @ts-ignore
-//                 // TODO: fix this
-//                 return `.Permit(${key}, ${NameForGolang(event?.event?.target) || '未知'})`
-//             }).join('\n\t\t') : ''
-//         }`
-//     }).join('\n\t')}
-    
-//     return machine
-// }`
+    const golangCode = `import "github.com/qmuntal/stateless"
 
-//     return golangCode;
+type State string
+const (\n ${Object.entries(config.states || {}).map(([key, value]) => `\t${key} State = "${key}"`).join('\n')}
+    )
+
+type Trigger string
+const (\n ${
+    events.map((event) => `\t${event} Trigger = "${event}"`).join('\n')}
+)
+
+func ${config.id}() *stateless.StateMachine {
+	machine := stateless.NewStateMachine(${String(config.initial)})
+    
+    ${""
+    //     states.map((state) => {
+    //     return `machine.Configure(${state.name})${
+    //         state.state.on ? Object.entries(state.state.on).map(([key, value]) => {
+    //             const event = events.find((event) => event.name === NameForGolang(`${state.name}_${key}`))
+    //             // @ts-ignore
+    //             // TODO: fix this
+    //             return `.Permit(${key}, ${NameForGolang(event?.event?.target) || '未知'})`
+    //         }).join('\n\t\t') : ''
+    //     }`
+    // }).join('\n\t')
+    }
+    
+    return machine
+}`
+
+    return golangCode;
 }
     
     
-// import { createMachine, assign } from 'xstate';
-
-// interface Context {
-//     retries: number;
-//   }
-  
-//   const fetchMachine = createMachine<Context>({
-//     id: 'fetch',
-//     initial: 'idle',
-//     context: {
-//       retries: 0
-//     },
-//     states: {
-//       idle: {
-//         on: {
-//           FETCH: 'loading'
-//         }
-//       },
-//       loading: {
-//         on: {
-//           RESOLVE: 'success',
-//           REJECT: 'failure'
-//         }
-//       },
-//       success: {
-//         type: 'final'
-//       },
-//       failure: {
-//         on: {
-//           RETRY: {
-//             target: 'loading',
-//             actions: assign({
-//               retries: (context, event) => context.retries + 1
-//             })
-//           }
-//         }
-//       }
-//     }
-//   });
-
-//   fetchMachine.states
