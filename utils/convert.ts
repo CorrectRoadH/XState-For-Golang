@@ -2,7 +2,6 @@
 import { TypegenConstraint, TypegenDisabled,  } from 'xstate/lib/typegenTypes';
 import { AnyEventObject, BaseActionObject, EventObject, MachineConfig, Typestate, ServiceMap,TransitionsConfig,StateNodeConfig } from 'xstate/lib/types';
 
-
 interface Event {
     name: string;
     event: EventObject;
@@ -65,6 +64,7 @@ func ${config.id}() *stateless.StateMachine {
         return `machine.Configure(${state.name})${
             state.state.on ? Object.entries(state.state.on).map(([key, value]) => {
                 const event = events.find((event) => event.event === value)
+                // @ts-ignore
                 return `.Permit(${key}, ${event?.event?.target || ''})`
             }).join('\n\t\t') : ''
         }`
