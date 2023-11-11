@@ -9,15 +9,15 @@ interface Event {
 
 interface State {
     name: string;
-    state: StateNodeConfig<any, any, EventObject, any>;
+    state: StateNodeConfig<any, StateSchema, EventObject, BaseActionObject>;
 }
 
-function getEventFromState(state: StatesConfig<any, StateSchema, EventObject, BaseActionObject>):Event[]{
+function getEventFromState(state:State):Event[]{
     const events:Event[] = []
-        if(state.on){
-            Object.entries(state.on).map(([key, value]) => {
+        if(state.state.on){
+            Object.entries(state.state.on).map(([key, value]) => {
                 events.push({
-                    name: key,
+                    name: `${state.name}_${key}`,
                     event: value as EventObject
                 })
             })
@@ -39,7 +39,7 @@ function getEvents(config:MachineConfig<any, any, EventObject, BaseActionObject,
     while (queue.length > 0) {
         const state = queue.shift()
         if(state){
-            events.push(...getEventFromState(state?.state || {}))
+            events.push(...getEventFromState(state))
         }
         if(state?.state.states){
             Object.entries(state.state.states).map(([key, value]) => {
@@ -108,7 +108,7 @@ func ${config.id}() *stateless.StateMachine {
     ${states.map((state) => {
         return `machine.Configure(${state.name})${
             state.state.on ? Object.entries(state.state.on).map(([key, value]) => {
-                const event = events.find((event) => event.name === key)
+                const event = events.find((event) => event.name === `${state.name}_${key}`)
                 // @ts-ignore
                 return `.Permit(${key}, ${event?.event?.target || '未知'})`
             }).join('\n\t\t') : ''
