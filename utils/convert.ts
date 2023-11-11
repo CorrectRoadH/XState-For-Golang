@@ -1,7 +1,7 @@
 
 import { TypegenConstraint, TypegenDisabled,  } from 'xstate/lib/typegenTypes';
 import { AnyEventObject, BaseActionObject, EventObject, MachineConfig, Typestate, ServiceMap,TransitionsConfig,StateNodeConfig, StatesConfig, StateSchema } from 'xstate/lib/types';
-
+import { NameForGolang } from './go';
 interface Event {
     name: string;
     event: EventObject;
@@ -17,7 +17,7 @@ function getEventFromState(state:State):Event[]{
         if(state.state.on){
             Object.entries(state.state.on).map(([key, value]) => {
                 events.push({
-                    name: `${state.name}_${key}`,
+                    name: NameForGolang(`${state.name}_${key}`),
                     event: value as EventObject
                 })
             })
@@ -31,7 +31,7 @@ function getEvents(config:MachineConfig<any, any, EventObject, BaseActionObject,
     const events:Event[] = []
     Object.entries(config.states || {}).map(([key, value]) => {
         queue.push({
-            name: key,
+            name: NameForGolang(key),
             state: value as StateNodeConfig<any, any, EventObject, any>
         })
     })
@@ -44,7 +44,7 @@ function getEvents(config:MachineConfig<any, any, EventObject, BaseActionObject,
         if(state?.state.states){
             Object.entries(state.state.states).map(([key, value]) => {
                 queue.push({
-                    name: `${state.name}_${key}`,
+                    name: NameForGolang(`${state.name}_${key}`),
                     state: value as StateNodeConfig<any, any, EventObject, any>
                 })
             })
@@ -59,7 +59,7 @@ function getStates(config:MachineConfig<any, any, EventObject, BaseActionObject,
     const states:State[] = []
     Object.entries(config.states || {}).map(([key, value]) => {
         queue.push({
-            name: key,
+            name: NameForGolang(key),
             state: value as StateNodeConfig<any, any, EventObject, any>
         })
     })
@@ -72,7 +72,7 @@ function getStates(config:MachineConfig<any, any, EventObject, BaseActionObject,
         if(state?.state.states){
             Object.entries(state.state.states).map(([key, value]) => {
                 queue.push({
-                    name: `${state.name}_${key}`,
+                    name: NameForGolang(`${state.name}_${key}`),
                     state: value as StateNodeConfig<any, any, EventObject, any>
                 })
             })
@@ -108,9 +108,10 @@ func ${config.id}() *stateless.StateMachine {
     ${states.map((state) => {
         return `machine.Configure(${state.name})${
             state.state.on ? Object.entries(state.state.on).map(([key, value]) => {
-                const event = events.find((event) => event.name === `${state.name}_${key}`)
+                const event = events.find((event) => event.name === NameForGolang(`${state.name}_${key}`))
                 // @ts-ignore
-                return `.Permit(${key}, ${event?.event?.target || '未知'})`
+                // TODO: fix this
+                return `.Permit(${key}, ${NameForGolang(event?.event?.target) || '未知'})`
             }).join('\n\t\t') : ''
         }`
     }).join('\n\t')}
