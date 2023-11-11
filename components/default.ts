@@ -14,20 +14,20 @@ export const defaultText = `{
         "states": {
           "pending": {
             "on": {
-              "有新版本": {
+              "found-new-version": {
                 "target": "out-of-date"
               },
-              "无新版本": {
+              "not-found-new-version": {
                 "target": "up-to-date"
               },
-              "出错": {
+              "error": {
                 "target": "#Installer State.Failure"
               }
             }
           },
           "out-of-date": {
             "on": {
-              "点击下载": {
+              "download": {
                 "target": "#Installer State.download"
               }
             }
@@ -67,14 +67,14 @@ export const defaultText = `{
           },
           "launch": {
             "on": {
-              "安装完成": {
+              "installComplete": {
                 "target": "#Installer State.fetching.up-to-date"
               }
             }
           }
         },
         "on": {
-          "出错": {
+          "error": {
             "target": "Failure"
           }
         }
@@ -84,17 +84,17 @@ export const defaultText = `{
         "states": {
           "pending": {
             "on": {
-              "下载完成": {
+              "downloadComplete": {
                 "target": "ready-to-date"
               },
-              "出错": {
+              "error": {
                 "target": "#Installer State.Failure"
               }
             }
           },
           "ready-to-date": {
             "on": {
-              "点击安装": {
+              "install": {
                 "target": "#Installer State.install"
               }
             }
