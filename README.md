@@ -9,6 +9,8 @@ Convert XState json to golang code
 ## Getting Started
 make state machine in stately studio. and export json file.
 
+![image](./images/screenshot.png)
+
 ## Learn More
 
 What is XState
@@ -17,7 +19,4 @@ what is Stately Studio
 
 What is State Machine in Golang
 
-
 ## Usage
-
-

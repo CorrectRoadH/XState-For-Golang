@@ -48,8 +48,7 @@ export function convert<TContext, TEvent extends EventObject = AnyEventObject, T
     const events = getEvent(config as MachineConfig<any, any, any, any>)
     const states = getStates(config as MachineConfig<any, any, any, any>)
 
-    const golangCode = `
-import "github.com/qmuntal/stateless"
+    const golangCode = `import "github.com/qmuntal/stateless"
 
 type State string
 const (\n ${Object.entries(config.states || {}).map(([key, value]) => `\t${key} State = "${key}"`).join('\n')}
