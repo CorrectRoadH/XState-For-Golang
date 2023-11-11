@@ -1,0 +1,112 @@
+{
+    "id": "Installer State",
+    "initial": "idle",
+    "states": {
+      "idle": {
+        "on": {
+          "getRelease": {
+            "target": "fetching"
+          }
+        }
+      },
+      "fetching": {
+        "initial": "pending",
+        "states": {
+          "pending": {
+            "on": {
+              "有新版本": {
+                "target": "out-of-date"
+              },
+              "无新版本": {
+                "target": "up-to-date"
+              },
+              "出错": {
+                "target": "#Installer State.Failure"
+              }
+            }
+          },
+          "out-of-date": {
+            "on": {
+              "点击下载": {
+                "target": "#Installer State.download"
+              }
+            }
+          },
+          "up-to-date": {
+            "on": {
+              "getRelease": {
+                "target": "pending"
+              }
+            }
+          }
+        }
+      },
+      "install": {
+        "initial": "beforeInstall",
+        "states": {
+          "beforeInstall": {
+            "on": {
+              "Event 1": {
+                "target": "install"
+              }
+            }
+          },
+          "install": {
+            "on": {
+              "Event 1": {
+                "target": "postInstall"
+              }
+            }
+          },
+          "postInstall": {
+            "on": {
+              "Event 1": {
+                "target": "launch"
+              }
+            }
+          },
+          "launch": {
+            "on": {
+              "安装完成": {
+                "target": "#Installer State.fetching.up-to-date"
+              }
+            }
+          }
+        },
+        "on": {
+          "出错": {
+            "target": "Failure"
+          }
+        }
+      },
+      "download": {
+        "initial": "pending",
+        "states": {
+          "pending": {
+            "on": {
+              "下载完成": {
+                "target": "ready-to-date"
+              },
+              "出错": {
+                "target": "#Installer State.Failure"
+              }
+            }
+          },
+          "ready-to-date": {
+            "on": {
+              "点击安装": {
+                "target": "#Installer State.install"
+              }
+            }
+          }
+        }
+      },
+      "Failure": {
+        "on": {
+          "reset": {
+            "target": "idle"
+          }
+        }
+      }
+    }
+  }
