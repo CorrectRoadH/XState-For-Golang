@@ -11,6 +11,7 @@ interface State {
     name: string;
     state: StateNodeConfig<any, any, EventObject, any>;
 }
+
 function getEvent(config:MachineConfig<any, any, EventObject, BaseActionObject, any,any>):Event[]{
     const events:Event[] = []
     Object.entries(config.states || {}).map(([key, value]) => {
@@ -36,6 +37,8 @@ function getStates(config:MachineConfig<any, any, EventObject, BaseActionObject,
     })
     return states
 }
+
+
 export function convert<TContext, TEvent extends EventObject = AnyEventObject, TTypestate extends Typestate<TContext> = {
     value: any;
     context: TContext;
