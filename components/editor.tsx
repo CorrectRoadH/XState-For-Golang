@@ -5,14 +5,14 @@ import { convert } from "@/utils/convert";
 
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { docco } from 'react-syntax-highlighter/dist/esm/styles/hljs';
-import jsonStr from "./default.json";
+import {defaultText} from "./default";
 import { Toaster, toast } from 'sonner'
 
 import { useCopyToClipboard } from 'usehooks-ts'
 
 const Editor = () => {
 
-    const [json, setJson] = useState(JSON.stringify(jsonStr));
+    const [json, setJson] = useState(defaultText);
     const [code,setCode] = useState("");
     const [value, copy] = useCopyToClipboard()
 
@@ -21,7 +21,7 @@ const Editor = () => {
     }
   
     const handleFormatBtnClick = ()=>{
-      setJson(JSON.stringify(JSON.stringify(json), null, 2))
+      setJson(JSON.stringify(JSON.parse(json), null, 2))
     }
 
     const valid = true

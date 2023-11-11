@@ -1,4 +1,4 @@
-{
+export const defaultText = `{
     "id": "Installer State",
     "initial": "idle",
     "states": {
@@ -109,4 +109,4 @@
         }
       }
     }
-  }
+  }`
