@@ -1,6 +1,6 @@
 
 import { TypegenConstraint, TypegenDisabled,  } from 'xstate/lib/typegenTypes';
-import { AnyEventObject, BaseActionObject, EventObject, MachineConfig, Typestate, ServiceMap,TransitionsConfig,StateNodeConfig } from 'xstate/lib/types';
+import { AnyEventObject, BaseActionObject, EventObject, MachineConfig, Typestate, ServiceMap,TransitionsConfig,StateNodeConfig, StatesConfig, StateSchema } from 'xstate/lib/types';
 
 interface Event {
     name: string;
@@ -12,20 +12,47 @@ interface State {
     state: StateNodeConfig<any, any, EventObject, any>;
 }
 
-function getEvent(config:MachineConfig<any, any, EventObject, BaseActionObject, any,any>):Event[]{
+function getEventFromState(state: StatesConfig<any, StateSchema, EventObject, BaseActionObject>):Event[]{
     const events:Event[] = []
-    Object.entries(config.states || {}).map(([key, value]) => {
-        if(value.on){
-            Object.entries(value.on).map(([key, value]) => {
+        if(state.on){
+            Object.entries(state.on).map(([key, value]) => {
                 events.push({
                     name: key,
                     event: value as EventObject
                 })
             })
         }
-    })
+
     return events
 }
+
+function getEvents(config:MachineConfig<any, any, EventObject, BaseActionObject, any,any>):Event[]{
+    const queue:State[] = []
+    const events:Event[] = []
+    Object.entries(config.states || {}).map(([key, value]) => {
+        queue.push({
+            name: key,
+            state: value as StateNodeConfig<any, any, EventObject, any>
+        })
+    })
+
+    while (queue.length > 0) {
+        const state = queue.shift()
+        if(state){
+            events.push(...getEventFromState(state?.state || {}))
+        }
+        if(state?.state.states){
+            Object.entries(state.state.states).map(([key, value]) => {
+                queue.push({
+                    name: `${state.name}_${key}`,
+                    state: value as StateNodeConfig<any, any, EventObject, any>
+                })
+            })
+        }
+    }
+    return events
+}
+
 
 function getStates(config:MachineConfig<any, any, EventObject, BaseActionObject, any,any>):State[]{
     const queue:State[] = []
@@ -54,26 +81,16 @@ function getStates(config:MachineConfig<any, any, EventObject, BaseActionObject,
     return states
 }
 
-function getSubStates(config:MachineConfig<any, any, EventObject, BaseActionObject, any,any>,stateName:string):State[]{
-    const state = config.states?.[stateName]
-    const subStates = state?.states
-    return Object.entries(subStates || {}).map(([key, value]) => {
-        return {
-            name: key,
-            state: value as StateNodeConfig<any, any, EventObject, any>
-        }
-    })
-}
 
 export function convert<TContext, TEvent extends EventObject = AnyEventObject, TTypestate extends Typestate<TContext> = {
     value: any;
     context: TContext;
 }, TServiceMap extends ServiceMap = ServiceMap, TTypesMeta extends TypegenConstraint = TypegenDisabled>(config:MachineConfig<TContext, any, TEvent, BaseActionObject, TServiceMap, TTypesMeta>):string{
-    console.log(config);
 
-    const events = getEvent(config as MachineConfig<any, any, any, any>)
+    const events = getEvents(config as MachineConfig<any, any, any, any>)
     const states = getStates(config as MachineConfig<any, any, any, any>)
 
+    console.log(events)
     const golangCode = `import "github.com/qmuntal/stateless"
 
 type State string
