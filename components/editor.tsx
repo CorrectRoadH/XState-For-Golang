@@ -70,7 +70,7 @@ const Editor = () => {
           <button className="btn btn-primary"
             onClick={handleConvertBtnClick}
           >
-            Convert
+            Export
           </button>
         </div>
         

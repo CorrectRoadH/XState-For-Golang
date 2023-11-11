@@ -28,16 +28,42 @@ function getEvent(config:MachineConfig<any, any, EventObject, BaseActionObject, 
 }
 
 function getStates(config:MachineConfig<any, any, EventObject, BaseActionObject, any,any>):State[]{
+    const queue:State[] = []
     const states:State[] = []
     Object.entries(config.states || {}).map(([key, value]) => {
-        states.push({
+        queue.push({
             name: key,
             state: value as StateNodeConfig<any, any, EventObject, any>
         })
     })
+
+    while (queue.length > 0) {
+        const state = queue.shift()
+        if(state){
+            states.push(state)
+        }
+        if(state?.state.states){
+            Object.entries(state.state.states).map(([key, value]) => {
+                queue.push({
+                    name: `${state.name}_${key}`,
+                    state: value as StateNodeConfig<any, any, EventObject, any>
+                })
+            })
+        }
+    }
     return states
 }
 
+function getSubStates(config:MachineConfig<any, any, EventObject, BaseActionObject, any,any>,stateName:string):State[]{
+    const state = config.states?.[stateName]
+    const subStates = state?.states
+    return Object.entries(subStates || {}).map(([key, value]) => {
+        return {
+            name: key,
+            state: value as StateNodeConfig<any, any, EventObject, any>
+        }
+    })
+}
 
 export function convert<TContext, TEvent extends EventObject = AnyEventObject, TTypestate extends Typestate<TContext> = {
     value: any;
@@ -65,9 +91,9 @@ func ${config.id}() *stateless.StateMachine {
     ${states.map((state) => {
         return `machine.Configure(${state.name})${
             state.state.on ? Object.entries(state.state.on).map(([key, value]) => {
-                const event = events.find((event) => event.event === value)
+                const event = events.find((event) => event.name === key)
                 // @ts-ignore
-                return `.Permit(${key}, ${event?.event?.target || ''})`
+                return `.Permit(${key}, ${event?.event?.target || '未知'})`
             }).join('\n\t\t') : ''
         }`
     }).join('\n\t')}
