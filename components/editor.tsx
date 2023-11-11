@@ -16,6 +16,12 @@ const Editor = () => {
       setCode(convert(JSON.parse(json)));
     }
   
+    const handleFormatBtnClick = ()=>{
+      setJson(JSON.stringify(JSON.stringify(json), null, 2))
+    }
+
+    const valid = true
+
     return (
         <div className="flex items-center justify-between">
         
@@ -27,17 +33,28 @@ const Editor = () => {
             onChange={(e) => setJson(e.target.value)}
           />
 
-            <div className="flex py-2">
-                <button className="btn btn-neutral">Format</button>
+            <div className="flex py-2 gap-5">
+                <button className="btn btn-neutral"
+                  onClick={handleFormatBtnClick}
+                >Format</button>
+
+                <div className="my-auto flex gap-2">
+                  <span>{`✅`}</span>
+                  <div className="text-green-600 font-semibold	">Json is valid</div>
+                </div>
             </div>
+
+
         </div>
 
         <div className="flex flex-col w-2/12 gap-5">
           <div>
             <div>Go State Machine library</div>
-            <select className="select select-bordered w-full max-w-xs">
-              <option selected>Stateless</option>
-              <option disabled>FMS</option>
+            <select className="select select-bordered w-full max-w-xs"
+              defaultValue="1"
+            >
+              <option value="1" selected>Stateless</option>
+              <option value="2" disabled>FMS</option>
             </select>
           </div>
 
@@ -50,8 +67,6 @@ const Editor = () => {
         
         <div className="w-5/12 p-5">
           <div className="text-3xl	font-black">Golang Code</div>
-
-          
 
           <SyntaxHighlighter className="w-full h-[45rem] textarea" language="javascript" style={docco}>
             {code}
