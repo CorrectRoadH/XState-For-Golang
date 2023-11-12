@@ -12,6 +12,12 @@ make state machine in stately studio. and export json file.
 
 [Getting Start](./docs/getting-start.md)
 
+## Roadmap
+- [ ] support parallel state to stateless 
+- [ ] support action and invoke to stateless
+- [ ] write the document
+- [ ] write the test cases
+
 
 ## Learn More
 
