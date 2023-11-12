@@ -70,7 +70,7 @@ func Create_New_Machine() *stateless.StateMachine {
 `
     },{
         input:`{
-            "id": "New Machine",
+            "id": "Self_Parent",
             "initial": "Initial state",
             "states": {
               "Initial state": {
@@ -83,17 +83,17 @@ func Create_New_Machine() *stateless.StateMachine {
               "Another state": {
                 "on": {
                   "Event 1": {
-                    "target": "#New Machine.New state 3.New state 1"
+                    "target": "#Self_Parent.SelfParent.Selft"
                   }
                 }
               },
-              "New state 3": {
-                "initial": "New state 1",
+              "SelfParent": {
+                "initial": "Selft",
                 "states": {
-                  "New state 1": {
+                  "Selft": {
                     "on": {
-                      "Event 1": {
-                        "target": "New state 1"
+                      "backSelf": {
+                        "target": "Selft"
                       }
                     }
                   }
@@ -106,7 +106,37 @@ func Create_New_Machine() *stateless.StateMachine {
               }
             }
           }`
-          ,except:`package state`
+          ,except:`package state
+import "github.com/qmuntal/stateless"
+
+type State string
+type Trigger string
+
+const (
+    Self_Parent State = "Self_Parent"
+    Self_Parent_Initial_state State = "Self_Parent.Initial state"
+    Self_Parent_Another_state State = "Self_Parent.Another state"
+    Self_Parent_SelfParent State = "Self_Parent.SelfParent"
+    Self_Parent_SelfParent_Selft State = "Self_Parent.SelfParent.Selft"
+)
+
+const (
+    Next Trigger = "next"
+    Event_1 Trigger = "Event 1"
+    BackSelf Trigger = "backSelf"
+)
+
+
+func Create_Self_Parent() *stateless.StateMachine {
+    machine := stateless.NewStateMachine(Self_Parent_Initial_state)
+
+    machine.Configure(Self_Parent_Initial_state).SubstateOf(Self_Parent).Permit(Next,Self_Parent_Another_state)
+    machine.Configure(Self_Parent_Another_state).SubstateOf(Self_Parent).Permit(Event_1,Self_Parent_SelfParent_Selft)
+    machine.Configure(Self_Parent_SelfParent).Initial(Self_Parent_SelfParent_Selft).SubstateOf(Self_Parent).Permit(Event_1,Self_Parent_Initial_state)
+    machine.Configure(Self_Parent_SelfParent_Selft).SubstateOf(Self_Parent_SelfParent).Permit(BackSelf,Self_Parent_SelfParent_Selft)
+    return machine
+}
+`
     }
 ]
 
