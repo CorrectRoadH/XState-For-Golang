@@ -97,7 +97,37 @@ const test_case_2 = `{
   }
 }`
 test('only State and Event', () => {
-  expect(exportAsCode(test_case_2)).toBe(``)
+  expect(exportAsCode(test_case_2)).toBe(`package state
+import "github.com/qmuntal/stateless"
+
+type State string
+type Trigger string
+
+const (
+    New_Machine State = "New Machine"
+    New_Machine_Initial_state State = "New Machine.Initial state"
+    New_Machine_Another_state State = "New Machine.Another state"
+    New_Machine_New_state_1 State = "New Machine.New state 1"
+    New_Machine_New_state_2 State = "New Machine.New state 2"
+)
+
+const (
+    Next Trigger = "next"
+    Event_2 Trigger = "Event 2"
+    Event_1 Trigger = "Event 1"
+)
+
+
+func Create_New_Machine() *stateless.StateMachine {
+    machine := stateless.NewStateMachine(New_Machine_Initial_state)
+
+    machine.Configure(New_Machine_Initial_state).SubstateOf(New_Machine).Permit(Next,New_Machine_Another_state)
+    machine.Configure(New_Machine_Another_state).SubstateOf(New_Machine).Permit(Next,New_Machine_Initial_state).Permit(Event_2,New_Machine_New_state_1)
+    machine.Configure(New_Machine_New_state_1).SubstateOf(New_Machine).Permit(Event_1,New_Machine_New_state_2)
+    machine.Configure(New_Machine_New_state_2).SubstateOf(New_Machine).Permit(Event_1,New_Machine_Another_state)
+    return machine
+}
+`)
 })
 
   
