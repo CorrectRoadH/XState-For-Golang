@@ -68,6 +68,45 @@ func Create_New_Machine() *stateless.StateMachine {
     return machine
 }
 `
+    },{
+        input:`{
+            "id": "New Machine",
+            "initial": "Initial state",
+            "states": {
+              "Initial state": {
+                "on": {
+                  "next": {
+                    "target": "Another state"
+                  }
+                }
+              },
+              "Another state": {
+                "on": {
+                  "Event 1": {
+                    "target": "#New Machine.New state 3.New state 1"
+                  }
+                }
+              },
+              "New state 3": {
+                "initial": "New state 1",
+                "states": {
+                  "New state 1": {
+                    "on": {
+                      "Event 1": {
+                        "target": "New state 1"
+                      }
+                    }
+                  }
+                },
+                "on": {
+                  "Event 1": {
+                    "target": "Initial state"
+                  }
+                }
+              }
+            }
+          }`
+          ,except:`package state`
     }
 ]
 
