@@ -3,7 +3,7 @@ function upperFirstName(name: string): string {
 }
 
 function replaceProhibitedChars(name: string): string {
-    return name.replace(" ", '_')
+    return name.replaceAll(" ", '_').replaceAll("-", "_")
 }
 export function NameForGolang(name: string): string {
     return replaceProhibitedChars(upperFirstName(name))
