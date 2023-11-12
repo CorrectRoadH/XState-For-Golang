@@ -1,112 +1,37 @@
 export const defaultText = `{
-    "id": "Installer State",
-    "initial": "idle",
-    "states": {
-      "idle": {
-        "on": {
-          "getRelease": {
-            "target": "fetching"
-          }
+  "id": "New Machine",
+  "initial": "Initial state",
+  "states": {
+    "Initial state": {
+      "on": {
+        "next": {
+          "target": "Another state"
         }
-      },
-      "fetching": {
-        "initial": "pending",
-        "states": {
-          "pending": {
-            "on": {
-              "found-new-version": {
-                "target": "out-of-date"
-              },
-              "not-found-new-version": {
-                "target": "up-to-date"
-              },
-              "error": {
-                "target": "#Installer State.Failure"
-              }
-            }
-          },
-          "out-of-date": {
-            "on": {
-              "download": {
-                "target": "#Installer State.download"
-              }
-            }
-          },
-          "up-to-date": {
-            "on": {
-              "getRelease": {
-                "target": "pending"
-              }
-            }
-          }
-        }
-      },
-      "install": {
-        "initial": "beforeInstall",
-        "states": {
-          "beforeInstall": {
-            "on": {
-              "Event 1": {
-                "target": "install"
-              }
-            }
-          },
-          "install": {
-            "on": {
-              "Event 1": {
-                "target": "postInstall"
-              }
-            }
-          },
-          "postInstall": {
-            "on": {
-              "Event 1": {
-                "target": "launch"
-              }
-            }
-          },
-          "launch": {
-            "on": {
-              "installComplete": {
-                "target": "#Installer State.fetching.up-to-date"
-              }
-            }
-          }
+      }
+    },
+    "Another state": {
+      "on": {
+        "next": {
+          "target": "Initial state"
         },
-        "on": {
-          "error": {
-            "target": "Failure"
-          }
+        "Event 2": {
+          "target": "New state 1"
         }
-      },
-      "download": {
-        "initial": "pending",
-        "states": {
-          "pending": {
-            "on": {
-              "downloadComplete": {
-                "target": "ready-to-date"
-              },
-              "error": {
-                "target": "#Installer State.Failure"
-              }
-            }
-          },
-          "ready-to-date": {
-            "on": {
-              "install": {
-                "target": "#Installer State.install"
-              }
-            }
-          }
+      }
+    },
+    "New state 1": {
+      "on": {
+        "Event 1": {
+          "target": "New state 2"
         }
-      },
-      "Failure": {
-        "on": {
-          "reset": {
-            "target": "idle"
-          }
+      }
+    },
+    "New state 2": {
+      "on": {
+        "Event 1": {
+          "target": "Another state"
         }
       }
     }
-  }`
+  }
+}`
