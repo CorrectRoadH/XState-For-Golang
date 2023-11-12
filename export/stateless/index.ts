@@ -9,12 +9,33 @@ export function exportAsCode(json: string):string{
     const fetchMachine = createMachine<any>(xstateObj)
 
     const event_names = fetchMachine.events
+
+    
+    // get all state from fetchMachine
     const state_nodes = new Map<string, any>()
+    const queue:any[] = []
 
     Object.entries(fetchMachine.states).map(([key, value]) => {
-        state_nodes.set(value.id, value)
+        // state_nodes.set(value.id, value)
+        queue.push(value)
     })
     
+    // iterate state_nodes to push the children state
+    while (queue.length > 0) {
+        const current_state = queue.shift()
+        state_nodes.set(current_state.id, current_state)
+
+        if(current_state){
+            state_nodes.set(current_state.id, current_state)
+            if(current_state.states){
+                Object.entries(current_state.states).map(([key, value]) => {
+                    queue.push(value)
+                })
+            }
+        }
+    }
+    // --------
+
 
     let code = `package state
 import "github.com/qmuntal/stateless"
