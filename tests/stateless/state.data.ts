@@ -1,4 +1,5 @@
 const state_event_test_cases = [
+    // test case 1. state and event
     {
         input:`{
             "id": "New Machine",
@@ -68,7 +69,9 @@ func Create_New_Machine() *stateless.StateMachine {
     return machine
 }
 `
-    },{
+    },
+    // test case 2. state and nested state and event and self-transition
+    {
         input:`{
             "id": "Self_Parent",
             "initial": "Initial state",
@@ -138,6 +141,7 @@ func Create_Self_Parent() *stateless.StateMachine {
 }
 `
     }
+    // test case 3. state and event and guard
 ]
 
 export { state_event_test_cases }

@@ -13,6 +13,7 @@
     "@egoist/tailwindcss-icons": "^1.4.0",
     "@iconify-json/lucide": "^1.1.141",
     "@iconify-json/mdi": "^1.1.55",
+    "@react-hookz/web": "^23.1.0",
     "next": "14.0.2",
     "react": "^18",
     "react-copy-to-clipboard": "^5.1.0",

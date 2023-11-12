@@ -9,12 +9,14 @@ import {defaultText} from "./default";
 import { Toaster, toast } from 'sonner'
 
 import { useCopyToClipboard } from 'usehooks-ts'
+import { useDebouncedEffect } from '@react-hookz/web';
 
 const Editor = () => {
 
     const [json, setJson] = useState(defaultText);
     const [code,setCode] = useState("");
     const [value, copy] = useCopyToClipboard()
+    const [valid, setValid] = useState(true)
 
     const handleConvertBtnClick = () => {
       setCode(exportAsCode(json));
@@ -22,9 +24,25 @@ const Editor = () => {
   
     const handleFormatBtnClick = ()=>{
       setJson(JSON.stringify(JSON.parse(json), null, 2))
+      toast('Format Success!')
+
     }
 
-    const valid = true
+
+    useDebouncedEffect(
+      () => {
+        try{
+          JSON.parse(json)
+          setValid(true)
+        }catch{
+          setValid(false)
+        }
+      },
+      [json],
+      200,
+      500
+    );
+  
 
 
     const handleCopyBtnClick = ()=>{
@@ -48,8 +66,11 @@ const Editor = () => {
                 >Format</button>
 
                 <div className="my-auto flex gap-2">
-                  <span>{`✅`}</span>
-                  <div className="text-green-600 font-semibold	">Json is valid</div>
+                  <span>{valid?`✅`:`🚫`}</span>
+                  <div className={`${valid?"text-green-600":"text-red-600"} font-semibold`}>
+                    {
+                      valid ? "Json is valid" : "Json is invalid"}
+                  </div>
                 </div>
             </div>
 
