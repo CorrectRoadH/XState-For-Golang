@@ -37,7 +37,7 @@ const Editor = () => {
         <div className="w-5/12 rounded-3xl p-5">
           <div className="text-3xl	font-black">XState Json</div>
           <textarea 
-            className="textarea textarea-primary	 w-full h-[45rem]" 
+            className="textarea textarea-primary w-full h-[45rem]" 
             value={json}
             onChange={(e) => setJson(e.target.value)}
           />
@@ -77,7 +77,7 @@ const Editor = () => {
         <div className="w-5/12 p-5">
           <div className="text-3xl	font-black">Golang Code</div>
 
-          <SyntaxHighlighter className="w-full h-[45rem] textarea" language="javascript" style={docco}>
+          <SyntaxHighlighter className="w-full h-[45rem] textarea textarea-primary" language="javascript" style={docco}>
             {code}
           </SyntaxHighlighter>
           
