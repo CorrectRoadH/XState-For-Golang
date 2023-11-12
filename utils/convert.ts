@@ -2,7 +2,7 @@
 import { TypegenConstraint, TypegenDisabled,  } from 'xstate/lib/typegenTypes';
 import { AnyEventObject, BaseActionObject, EventObject, MachineConfig, Typestate, ServiceMap,TransitionsConfig,StateNodeConfig, StatesConfig, StateSchema } from 'xstate/lib/types';
 import { NameForGolang } from './go';
-import { createMachine } from 'xstate';
+import { StateNodesConfig, createMachine } from 'xstate';
 interface Event {
     name: string;
     event: EventObject;
@@ -82,6 +82,35 @@ function getStates(config:MachineConfig<any, any, EventObject, BaseActionObject,
     return states
 }
 
+function getAllChildrenStates(state:StateNodesConfig<any, any, AnyEventObject>):State[]{
+    const queue:State[] = []
+    const states:State[] = []
+    Object.entries(state).map(([key, value]) => {
+        queue.push({
+            name: NameForGolang(key),
+            state: value as StateNodeConfig<any, any, EventObject, any>
+        })
+    })
+
+    while (queue.length > 0) {
+        const state = queue.shift()
+        if(state){
+            states.push(state)
+        }
+        if(state?.state.states){
+            Object.entries(state.state.states).map(([key, value]) => {
+                queue.push({
+                    name: NameForGolang(`${state.name}_${key}`),
+                    state: value as StateNodeConfig<any, any, EventObject, any>
+                })
+            })
+        }
+    }
+    return states
+
+
+}
+
 
 export function convert<TContext, TEvent extends EventObject = AnyEventObject, TTypestate extends Typestate<TContext> = {
     value: any;
@@ -91,7 +120,7 @@ export function convert<TContext, TEvent extends EventObject = AnyEventObject, T
     const fetchMachine = createMachine<any>(config as MachineConfig<any, any, any, any>)
     // console.log(fetchMachine)
 //     const events = getEvents(config as MachineConfig<any, any, any, any>)
-    const states = fetchMachine.states
+    const states = getAllChildrenStates(fetchMachine.states)
     console.log(states)
 
     const events = fetchMachine.events
@@ -110,17 +139,15 @@ const (\n ${
 func ${config.id}() *stateless.StateMachine {
 	machine := stateless.NewStateMachine(${String(config.initial)})
     
-    ${""
-    //     states.map((state) => {
-    //     return `machine.Configure(${state.name})${
-    //         state.state.on ? Object.entries(state.state.on).map(([key, value]) => {
-    //             const event = events.find((event) => event.name === NameForGolang(`${state.name}_${key}`))
-    //             // @ts-ignore
-    //             // TODO: fix this
-    //             return `.Permit(${key}, ${NameForGolang(event?.event?.target) || '未知'})`
-    //         }).join('\n\t\t') : ''
-    //     }`
-    // }).join('\n\t')
+    ${
+        states.map((state) => {
+        return `machine.Configure(${state.name})${
+            state.state.on ? Object.entries(state.state.on).map(([key, value]) => {
+                console.log(value)
+                return `.Permit(${key}, ${value[0].target[0].id})`
+            }).join('\n\t\t') : ''
+        }`
+    }).join('\n\t')
     }
     
     return machine
