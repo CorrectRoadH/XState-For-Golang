@@ -96,6 +96,7 @@ const test_case_2 = `{
     }
   }
 }`
+
 test('only State and Event', () => {
   expect(exportAsCode(test_case_2)).toBe(`package state
 import "github.com/qmuntal/stateless"

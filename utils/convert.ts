@@ -110,6 +110,7 @@ func ${NameForGolang(config.id||"")}() *stateless.StateMachine {
         states.map((state) => {
         return `machine.Configure(${state.name})${
             state.state.on ? Object.entries(state.state.on).map(([key, value]) => {
+                // @ts-ignore
                 return value?.map((on:any) => {
                     return on.target.map((state:any) => {
                         return `.Permit(${NameForGolang(key)}, ${NameForGolang(convertEventTargetName(context,state.id))})`
