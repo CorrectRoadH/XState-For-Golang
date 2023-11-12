@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { convert } from "@/utils/convert";
-
+import { exportAsCode } from "@/export/stateless";
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { docco } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import {defaultText} from "./default";
@@ -17,7 +17,7 @@ const Editor = () => {
     const [value, copy] = useCopyToClipboard()
 
     const handleConvertBtnClick = () => {
-      setCode(convert(JSON.parse(json)));
+      setCode(exportAsCode(json));
     }
   
     const handleFormatBtnClick = ()=>{
@@ -62,7 +62,7 @@ const Editor = () => {
             <select className="select select-bordered w-full max-w-xs"
               defaultValue="1"
             >
-              <option value="1" selected>Stateless</option>
+              <option value="1">Stateless</option>
               <option value="2" disabled>FMS</option>
             </select>
           </div>

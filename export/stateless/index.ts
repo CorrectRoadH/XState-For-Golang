@@ -1,4 +1,5 @@
 import { createMachine } from "xstate";
+import { NameForGolang } from '../../utils/go';
 
 
 export function exportAsCode(json: string):string{
@@ -27,7 +28,7 @@ ${
     function(){
         const states:string[] = []
         state_nodes.forEach((value, key) => {
-            states.push(`\t${key} State`)
+            states.push(`\t${NameForGolang(key)} State`)
         })
         return states.join('\n')
     }()
@@ -39,7 +40,7 @@ ${
     function(){
         const events:string[] = []
         event_names.forEach((value, index) => {
-            events.push(`\t${value} Trigger`)
+            events.push(`\t${NameForGolang(value)} Trigger`)
         })
         return events.join('\n')
     }()
@@ -48,21 +49,24 @@ ${
 
 
 func ${fetchMachine.id}() *stateless.StateMachine {
-\tmachine := stateless.NewStateMachine()
+\tmachine := stateless.NewStateMachine(${
+    // @ts-ignore
+    NameForGolang(fetchMachine.id+"."+fetchMachine.initial)
+})
 
 ${
     function(){
         const states:string[] = []
         // build the relation of state
         state_nodes.forEach((value, key) => {
-            let state_statement = `\tmachine.Configure(${key})`
+            let state_statement = `\tmachine.Configure(${NameForGolang(key)})`
     
             if(value.initial){
-                state_statement = state_statement.concat(`\n\t\t.Initial(${key+"."+value.initial})`)
+                state_statement = state_statement.concat(`\n\t\t.Initial(${NameForGolang(key+"."+value.initial)})`)
             }
     
             if(value.parent){
-                state_statement = state_statement.concat(`\n\t\t.SubstateOf(${value.parent.id})`)
+                state_statement = state_statement.concat(`\n\t\t.SubstateOf(${NameForGolang(value.parent.id)})`)
             }
     
             // process on
@@ -72,7 +76,7 @@ ${
                     events.map((event:any) => {
                         // events
                         event.target.map((target:any) => {
-                            state_statement = state_statement.concat(`\n\t\t.Permit(${key},${target.id})`)
+                            state_statement = state_statement.concat(`\n\t\t.Permit(${NameForGolang(key)},${NameForGolang(target.id)})`)
                         })
     
                         // invoke
