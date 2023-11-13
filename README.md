@@ -18,9 +18,13 @@ make state machine in stately studio. and export json file.
 | --- | --- | --- |
 | State | ✅ | 🚧 |
 | Event | ✅ | 🚧 |
+| Context | 🚧 | 🚧 |
 | Self-transition | ✅ | 🚧 |
-| Parrallel | 🚧 | 🚧 | 
+| Guard | 🚧 | 🚧 |
+| Parallel State | 🚧 | 🚧 | 
 | Action | 🚧 | 🚧 |
+| Effect | 🚧 | 🚧 |
+
 | Invoke | ❌ | ❌ |
 
 ## Learn More
