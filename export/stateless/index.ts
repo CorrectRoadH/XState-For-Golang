@@ -98,10 +98,15 @@ ${
                 Object.entries(value.on).map(([key, events]) => {
                     // @ts-ignore
                     events.map((event:any) => {
+                        console.log(event)
+
                         // events
-                        event.target.map((target:any) => {
-                            state_statement = state_statement.concat(`.Permit(${NameForGolang(key)},${NameForGolang(target.id)})`)
-                        })
+                        if(!event.cond){
+                            event.target.map((target:any) => {
+                                state_statement = state_statement.concat(`.Permit(${NameForGolang(key)},${NameForGolang(target.id)})`)
+                            })
+                        }
+                        
     
                         // invoke
                         // WIP
@@ -111,6 +116,15 @@ ${
     
                         // graud
                         // WIP
+                        if(event.cond){
+                            event.target.map((target:any) => {
+                                state_statement = state_statement.concat(`.Permit(${NameForGolang(key)},${NameForGolang(target.id)},func(_ context.Context, _ ...any) bool {
+                                    panic("need to implement")
+                                    return ${`// condition`}
+                                })`)
+                            })
+                        }
+
                     })
                 })
             }

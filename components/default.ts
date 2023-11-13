@@ -1,5 +1,5 @@
 export const defaultText = `{
-  "id": "Self_Parent",
+  "id": "New Machine",
   "initial": "Initial state",
   "states": {
     "Initial state": {
@@ -11,25 +11,33 @@ export const defaultText = `{
     },
     "Another state": {
       "on": {
-        "Event 1": {
-          "target": "#Self_Parent.SelfParent.Selft"
+        "next": {
+          "target": "Parent state",
+          "cond": "some condition"
+        },
+        "elseNext": {
+          "target": "Initial state"
         }
       }
     },
-    "SelfParent": {
-      "initial": "Selft",
+    "Parent state": {
+      "initial": "Child state",
       "states": {
-        "Selft": {
+        "Child state": {
           "on": {
-            "backSelf": {
-              "target": "Selft"
+            "next": {
+              "target": "Another child state"
             }
           }
-        }
+        },
+        "Another child state": {}
       },
       "on": {
-        "Event 1": {
-          "target": "Initial state"
+        "back": {
+          "target": "Initial state",
+          "actions": {
+            "type": "reset"
+          }
         }
       }
     }

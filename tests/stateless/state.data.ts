@@ -140,8 +140,12 @@ func Create_Self_Parent() *stateless.StateMachine {
     return machine
 }
 `
-    }
+    },
     // test case 3. state and event and guard
+    {
+      input:"",
+      except:`package state`
+    }
 ]
 
 export { state_event_test_cases }

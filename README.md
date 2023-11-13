@@ -17,14 +17,14 @@ make state machine in stately studio. and export json file.
 | XState | Stateless | FSM |
 | --- | --- | --- |
 | State | ✅ | 🚧 |
+| Hierarchical State | ✅ | 🚧 |
 | Event | ✅ | 🚧 |
-| Context | 🚧 | 🚧 |
 | Self-transition | ✅ | 🚧 |
+| Context | 🚧 | 🚧 |
 | Guard | 🚧 | 🚧 |
 | Parallel State | 🚧 | 🚧 | 
 | Action | 🚧 | 🚧 |
 | Effect | 🚧 | 🚧 |
-
 | Invoke | ❌ | ❌ |
 
 ## Learn More
