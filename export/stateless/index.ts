@@ -86,13 +86,32 @@ ${
             let state_statement = `    machine.Configure(${NameForGolang(key)})`
     
             if(value.initial){
-                state_statement = state_statement.concat(`.Initial(${NameForGolang(key+"."+value.initial)})`)
+                state_statement = state_statement.concat(`.InitialTransition(${NameForGolang(key+"."+value.initial)})`)
             }
     
             if(value.parent){
                 state_statement = state_statement.concat(`.SubstateOf(${NameForGolang(value.parent.id)})`)
             }
-    
+
+            if(value.onEntry.length > 0){
+                state_statement = state_statement.concat(`.OnEntry(func(_ context.Context, _ ...any) error {\n${
+                    value.onEntry.map((entry_action:any) => {
+                        console.log(entry_action)
+                        return `\t\t${NameForGolang(entry_action.type)}()\n`
+                    }) 
+                }\t}`)
+            }
+
+            if(value.onExit.length  > 0){
+                state_statement = state_statement.concat(`.OnExit(func(_ context.Context, _ ...any) error {\n${
+                    value.onEntry.map((exit_action:any) => {
+                        console.log(exit_action)
+                        return `\t\t${NameForGolang(exit_action.type)}()\n`
+                    }) 
+                }\t}`)
+            }
+
+
             // process on
             if(value.on){
                 Object.entries(value.on).map(([key, events]) => {
@@ -101,8 +120,6 @@ ${
                     if(events.length == 1){
                         // @ts-ignore
                         events.map((event:any) => {
-                            console.log(event)
-
                             // events
                             if(!event.cond){
                                 event.target.map((target:any) => {

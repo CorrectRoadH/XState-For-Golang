@@ -145,7 +145,8 @@ func Create_Self_Parent() *stateless.StateMachine {
     {
       input:"",
       except:`package state`
-    }
+    },
+    // test case 4. state and entry and exit event
 ]
 
 export { state_event_test_cases }
