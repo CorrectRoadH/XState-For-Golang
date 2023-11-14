@@ -19,6 +19,7 @@ make state machine in stately studio. and export json file.
 | State | ✅ | 🚧 |
 | Hierarchical State | ✅ | 🚧 |
 | Event | ✅ | 🚧 |
+| State Enter/Exit Action | ✅ | 🚧 |
 | Self-transition | ✅ | 🚧 |
 | Context | 🚧 | 🚧 |
 | Guard | ✅ | 🚧 |
