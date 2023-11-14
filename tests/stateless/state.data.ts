@@ -70,6 +70,7 @@ func Create_New_Machine() *stateless.StateMachine {
 }
 `
     },
+    
     // test case 2. state and nested state and event and self-transition
     {
         input:`{
@@ -141,12 +142,95 @@ func Create_Self_Parent() *stateless.StateMachine {
 }
 `
     },
+
     // test case 3. state and event and guard
+    {
+      input:`{
+        "id": "New Machine",
+        "initial": "Initial state",
+        "states": {
+          "Initial state": {
+            "on": {
+              "next": {
+                "target": "Another state"
+              }
+            }
+          },
+          "Another state": {
+            "on": {
+              "next": [
+                {
+                  "target": "Parent state",
+                  "cond": "some condition"
+                },
+                {
+                  "target": "Initial state"
+                }
+              ]
+            }
+          },
+          "Parent state": {
+            "initial": "Child state",
+            "states": {
+              "Child state": {
+                "on": {
+                  "next": {
+                    "target": "Another child state"
+                  }
+                }
+              },
+              "Another child state": {}
+            },
+            "on": {
+              "back": {
+                "target": "Initial state",
+                "actions": {
+                  "type": "reset"
+                }
+              }
+            }
+          }
+        }
+      }`,
+      except:`package state`
+    },
+
+    // test case 4. state and entry and exit event
+    {
+      input:`{
+        "id": "New Machine",
+        "initial": "Initial state",
+        "states": {
+          "Initial state": {
+            "on": {
+              "next": {
+                "target": "Another state"
+              }
+            }
+          },
+          "Another state": {
+            "entry": {
+              "type": "entry action"
+            },
+            "exit": {
+              "type": "exit action"
+            },
+            "on": {
+              "next": {
+                "target": "Initial state"
+              }
+            }
+          }
+        }
+      }`,
+      except:`package state`
+    },
+
+    // test case 5. Parallel State	
     {
       input:"",
       except:`package state`
     },
-    // test case 4. state and entry and exit event
 ]
 
 export { state_event_test_cases }
