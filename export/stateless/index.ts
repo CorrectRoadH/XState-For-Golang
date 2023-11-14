@@ -96,36 +96,55 @@ ${
             // process on
             if(value.on){
                 Object.entries(value.on).map(([key, events]) => {
+                    console.log(events)
                     // @ts-ignore
-                    events.map((event:any) => {
-                        console.log(event)
+                    if(events.length == 1){
+                        // @ts-ignore
+                        events.map((event:any) => {
+                            console.log(event)
 
-                        // events
-                        if(!event.cond){
-                            event.target.map((target:any) => {
-                                state_statement = state_statement.concat(`.Permit(${NameForGolang(key)},${NameForGolang(target.id)})`)
-                            })
-                        }
-                        
-    
-                        // invoke
-                        // WIP
-    
-                        // action
-                        // WIP
-    
-                        // graud
-                        // WIP
-                        if(event.cond){
-                            event.target.map((target:any) => {
-                                state_statement = state_statement.concat(`.Permit(${NameForGolang(key)},${NameForGolang(target.id)},func(_ context.Context, _ ...any) bool {
-                                    panic("need to implement")
-                                    return ${`// condition`}
-                                })`)
-                            })
-                        }
+                            // events
+                            if(!event.cond){
+                                event.target.map((target:any) => {
+                                    state_statement = state_statement.concat(`.Permit(${NameForGolang(key)},${NameForGolang(target.id)})`)
+                                })
+                            }
+                            // invoke
+                            // WIP
+        
+                            // action
+                            // WIP
+                        })
+                    }
 
-                    })
+                    // @ts-ignore
+                    if(events.length == 2){
+                        let condition = ""
+                        // @ts-ignore
+                        events.map((event:any) => {
+                            // graud
+                            // WIP
+                            if(event.cond){
+                                condition = NameForGolang(event.cond.name)
+                                event.target.map((target:any) => {
+                                    state_statement = state_statement.concat(`.Permit(${NameForGolang(key)},${NameForGolang(target.id)},func(_ context.Context, _ ...any) bool {
+                                        panic("need to implement")
+                                        return ${condition}()
+                                    })`)
+                                })
+                            }else{
+                                event.target.map((target:any) => {
+                                    state_statement = state_statement.concat(`.Permit(${NameForGolang(key)},${NameForGolang(target.id)},func(_ context.Context, _ ...any) bool {
+                                        panic("need to implement")
+                                        return !${condition}()
+                                    })`)
+                                })
+
+                            }
+                        })
+
+
+                    }
                 })
             }
             states.push(state_statement)

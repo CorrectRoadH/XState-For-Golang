@@ -11,13 +11,15 @@ export const defaultText = `{
     },
     "Another state": {
       "on": {
-        "next": {
-          "target": "Parent state",
-          "cond": "some condition"
-        },
-        "elseNext": {
-          "target": "Initial state"
-        }
+        "next": [
+          {
+            "target": "Parent state",
+            "cond": "some condition"
+          },
+          {
+            "target": "Initial state"
+          }
+        ]
       }
     },
     "Parent state": {

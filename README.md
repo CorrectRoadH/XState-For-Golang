@@ -21,7 +21,7 @@ make state machine in stately studio. and export json file.
 | Event | ✅ | 🚧 |
 | Self-transition | ✅ | 🚧 |
 | Context | 🚧 | 🚧 |
-| Guard | 🚧 | 🚧 |
+| Guard | ✅ | 🚧 |
 | Parallel State | 🚧 | 🚧 | 
 | Action | 🚧 | 🚧 |
 | Effect | 🚧 | 🚧 |
