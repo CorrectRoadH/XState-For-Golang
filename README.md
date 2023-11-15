@@ -21,10 +21,10 @@ make state machine in stately studio. and export json file.
 | Event | ✅ | 🚧 |
 | State Enter/Exit Action | ✅ | 🚧 |
 | Self-transition | ✅ | 🚧 |
-| Context | 🚧 | 🚧 |
+| Context | User implement | 🚧 |
 | Guard | ✅ | 🚧 |
 | Parallel State | 🚧 | 🚧 | 
-| Action | 🚧 | 🚧 |
+| Action | User implement | 🚧 |
 | Effect | 🚧 | 🚧 |
 | Invoke | ❌ | ❌ |
 

@@ -1,47 +1,51 @@
 export const defaultText = `{
   "id": "New Machine",
-  "initial": "Initial state",
+  "initial": "upload",
   "states": {
-    "Initial state": {
-      "on": {
-        "next": {
-          "target": "Another state"
-        }
-      }
-    },
-    "Another state": {
-      "on": {
-        "next": [
-          {
-            "target": "Parent state",
-            "cond": "some condition"
-          },
-          {
-            "target": "Initial state"
-          }
-        ]
-      }
-    },
-    "Parent state": {
-      "initial": "Child state",
+    "upload": {
       "states": {
-        "Child state": {
-          "on": {
-            "next": {
-              "target": "Another child state"
-            }
+        "upload": {
+          "initial": "idle",
+          "states": {
+            "idle": {
+              "on": {
+                "start": {
+                  "target": "pending"
+                }
+              }
+            },
+            "pending": {
+              "on": {
+                "Event 1": {
+                  "target": "success"
+                }
+              }
+            },
+            "success": {}
           }
         },
-        "Another child state": {}
-      },
-      "on": {
-        "back": {
-          "target": "Initial state",
-          "actions": {
-            "type": "reset"
+        "download": {
+          "initial": "idle",
+          "states": {
+            "idle": {
+              "on": {
+                "start": {
+                  "target": "pending"
+                }
+              }
+            },
+            "pending": {
+              "on": {
+                "Event 1": {
+                  "target": "sucess"
+                }
+              }
+            },
+            "sucess": {}
           }
         }
-      }
+      },
+      "type": "parallel"
     }
   }
 }`

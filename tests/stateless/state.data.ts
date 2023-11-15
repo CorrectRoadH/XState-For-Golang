@@ -228,7 +228,57 @@ func Create_Self_Parent() *stateless.StateMachine {
 
     // test case 5. Parallel State	
     {
-      input:"",
+      input:`{
+        "id": "New Machine",
+        "initial": "upload",
+        "states": {
+          "upload": {
+            "states": {
+              "upload": {
+                "initial": "idle",
+                "states": {
+                  "idle": {
+                    "on": {
+                      "start": {
+                        "target": "pending"
+                      }
+                    }
+                  },
+                  "pending": {
+                    "on": {
+                      "Event 1": {
+                        "target": "success"
+                      }
+                    }
+                  },
+                  "success": {}
+                }
+              },
+              "download": {
+                "initial": "idle",
+                "states": {
+                  "idle": {
+                    "on": {
+                      "start": {
+                        "target": "pending"
+                      }
+                    }
+                  },
+                  "pending": {
+                    "on": {
+                      "Event 1": {
+                        "target": "sucess"
+                      }
+                    }
+                  },
+                  "sucess": {}
+                }
+              }
+            },
+            "type": "parallel"
+          }
+        }
+      }`,
       except:`package state`
     },
 ]
